@@ -1,0 +1,88 @@
+What is Computer Programming?
+Definition: Computer programming is the process of designing and building an executable computer program to accomplish a specific computing task. Programming involves tasks such as analysis, generating algorithms, profiling algorithms' accuracy and resource consumption, and the implementation of algorithms.
+
+Importance:
+
+Automates tasks
+Solves complex problems
+Creates applications and software
+Enhances computational thinking
+Basic Concepts of Programming
+Variables and Data Types
+
+Variables: Storage locations with a name that hold data which can be modified during program execution.
+Example: int age = 25;
+Data Types: Specifies the type of data a variable can hold.
+Common data types:
+Integer: Whole numbers (e.g., int)
+Float/Double: Decimal numbers (e.g., float, double)
+Character: Single characters (e.g., char)
+String: Sequence of characters (e.g., string)
+Boolean: True or false values (e.g., bool)
+Operators
+
+Arithmetic Operators: Perform basic arithmetic operations (+, -, *, /, %).
+Example: int sum = 5 + 3;
+Relational Operators: Compare two values (==, !=, >, <, >=, <=).
+Example: bool isEqual = (5 == 3);
+Logical Operators: Combine multiple conditions (&&, ||, !).
+Example: bool result = (5 > 3) && (3 < 4);
+Control Structures
+
+Conditional Statements: Execute different code blocks based on conditions.
+
+if-else: Executes code if a condition is true, otherwise executes different code.
+Example:
+cpp
+Copy code
+if (age >= 18) {
+    cout << "Adult";
+} else {
+    cout << "Minor";
+}
+switch: Selects one of many code blocks to execute.
+Example:
+cpp
+Copy code
+switch (grade) {
+    case 'A':
+        cout << "Excellent";
+        break;
+    case 'B':
+        cout << "Good";
+        break;
+    default:
+        cout << "Unknown grade";
+}
+Loops: Repeat a block of code multiple times.
+
+for: Executes a block of code a specific number of times.
+Example:
+cpp
+Copy code
+for (int i = 0; i < 5; i++) {
+    cout << i << " ";
+}
+while: Repeats a block of code while a condition is true.
+Example:
+cpp
+Copy code
+int i = 0;
+while (i < 5) {
+    cout << i << " ";
+    i++;
+}
+do-while: Executes a block of code once, then repeats as long as a condition is true.
+Example:
+cpp
+Copy code
+int i = 0;
+do {
+    cout << i << " ";
+    i++;
+} while (i < 5);
+Functions
+
+Definition: A block of code that performs a specific task, designed to be reusable.
+Example:
+cpp

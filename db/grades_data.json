@@ -1,0 +1,51 @@
+{
+    "students": [
+      {
+        "id": "1",
+        "name": "Harry",
+        "subjects": {
+          "math": {
+            "scores": [85, 78, 92, 88, 90],
+            "average": 86.6
+          },
+          "science": {
+            "scores": [88, 82, 85, 90, 89],
+            "average": 86.8
+          },
+          "english": {
+            "scores": [80, 85, 88, 87, 90],
+            "average": 86.0
+          }
+        },
+        "class_average": {
+          "math": 80,
+          "science": 85,
+          "english": 82
+        }
+      },
+      {
+        "id": "2",
+        "name": "Robert",
+        "subjects": {
+          "math": {
+            "scores": [75, 78, 80, 82, 85],
+            "average": 80.0
+          },
+          "science": {
+            "scores": [85, 88, 90, 87, 90],
+            "average": 88.0
+          },
+          "english": {
+            "scores": [82, 85, 88, 90, 92],
+            "average": 87.4
+          }
+        },
+        "class_average": {
+          "math": 80,
+          "science": 85,
+          "english": 82
+        }
+      }
+    ]
+  }
+  

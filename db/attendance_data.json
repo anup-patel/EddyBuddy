@@ -1,0 +1,37 @@
+{
+    "students": [
+        {   
+            "id": "1",
+            "name": "Harry",
+            "attendance": {
+                "days_present": 120,
+                "days_absent": 10,
+                "max_absence_days_allowed": 16,
+                "days_left_in_session": 30,
+                "school_holidays": 5
+            }
+        },
+        {   
+            "id": "2",
+            "name": "Robert",
+            "attendance": {
+                "days_present": 115,
+                "days_absent": 15,
+                "max_absence_days_allowed": 16,
+                "days_left_in_session": 30,
+                "school_holidays": 5
+            }
+        },
+        {   
+            "id": "3",
+            "name": "John",
+            "attendance": {
+                "days_present": 110,
+                "days_absent": 20,
+                "max_absence_days_allowed": 16,
+                "days_left_in_session": 30,
+                "school_holidays": 5
+            }
+        }
+    ]
+}

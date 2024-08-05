@@ -1,0 +1,102 @@
+[
+    {
+        "id": 1,
+        "firstName": "Aisha",
+        "lastName": "Sharma",
+        "fatherName": "Vikram Sharma",
+        "city": "Mumbai",
+        "age": 30,
+        "dateOfBirth": "2015/06/20",
+        "hobby": "Reading"
+    },
+    {
+        "id": 2,
+        "firstName": "Ajay",
+        "lastName": "Choudhury",
+        "fatherName": "Krishna Choudhury",
+        "city": "Kolkatta",
+        "age": 31,
+        "dateOfBirth": "2013/07/29",
+        "hobby": "Swimming"
+    },
+    {
+        "id": 3,
+        "firstName": "Amit",
+        "lastName": "Agarwal",
+        "fatherName": "Rajeev Agarwal",
+        "city": "Delhi",
+        "age": 37,
+        "dateOfBirth": "2012/10/15",
+        "hobby": "Fishing"
+    },
+    {
+        "id": 4,
+        "firstName": "Anjali",
+        "lastName": "Mehta",
+        "fatherName": "Rakesh Mehta",
+        "city": "Bangalore",
+        "age": 38,
+        "dateOfBirth": "2011/08/19",
+        "hobby": "Gardening"
+    },
+    {
+        "id": 5,
+        "firstName": "Arjun",
+        "lastName": "Patel",
+        "fatherName": "Bhanu Patel",
+        "city": "Ahmedabad",
+        "age": 35,
+        "dateOfBirth": "2010/09/12",
+        "hobby": "Photography"
+    },
+    {
+        "id": 6,
+        "firstName": "Deepak",
+        "lastName": "Singh",
+        "fatherName": "Ravi Singh",
+        "city": "Lucknow",
+        "age": 42,
+        "dateOfBirth": "2016/11/30",
+        "hobby": "Cooking"
+    },
+    {
+        "id": 7,
+        "firstName": "Manish",
+        "lastName": "Kumar",
+        "fatherName": "Rajesh Kumar",
+        "city": "Delhi",
+        "age": 32,
+        "dateOfBirth": "2017/12/01",
+        "hobby": "Sports"
+    },
+    {
+        "id": 8,
+        "firstName": "Manoj",
+        "lastName": "Kumar",
+        "fatherName": "Sunil Kumar",
+        "city": "Chennai",
+        "age": 44,
+        "dateOfBirth": "2010/04/22",
+        "hobby": "Reading"
+    },
+    {
+        "id": 9,
+        "firstName": "Meera",
+        "lastName": "Joshi",
+        "fatherName": "Ravi Joshi",
+        "city": "Jaipur",
+        "age": 28,
+        "dateOfBirth": "2018/06/12",
+        "hobby": "Gardening"
+    },
+    {
+        "id": 10,
+        "firstName": "Neha",
+        "lastName": "Gupta",
+        "fatherName": "Sanjay Gupta",
+        "city": "Delhi",
+        "age": 33,
+        "dateOfBirth": "2017/07/15",
+        "hobby": "Yoga"
+    }
+]

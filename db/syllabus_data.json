@@ -1,0 +1,29 @@
+{
+    "subjects": {
+        "math": {
+            "topics": [
+                {"topic": "Algebra", "expected_completion_date": "2024-04-01"},
+                {"topic": "Geometry", "expected_completion_date": "2024-06-01"},
+                {"topic": "Trigonometry", "expected_completion_date": "2024-10-01"}
+            ]
+        },
+        "science": {
+            "topics": [
+                {"topic": "Photosynthesis and Plant Functions", "expected_completion_date": "2024-05-15"},
+                {"topic": "Human Digestive System", "expected_completion_date": "2024-09-15"},
+                {"topic": "Animal Classification and Habitats", "expected_completion_date": "2024-11-15"}
+            ]
+        },
+        "english": {
+            "topics": [
+                {"topic": "Grammar", "expected_completion_date": "2024-04-20"},
+                {"topic": "Comprehension", "expected_completion_date": "2024-07-20"},
+                {"topic": "Writing Skills", "expected_completion_date": "2024-11-20"}
+            ]
+        }
+    },
+    "important_dates": {
+        "mid_term_exam": "2024-05-20",
+        "end_term_exam": "2025-01-20"
+    }
+}
