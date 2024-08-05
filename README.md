@@ -28,3 +28,5 @@ Add freepik API in :
 - Attendence Tracking
 - Notice Board
 - Speech Capability for the ease of blind peoples using Falcon
+
+UI Template from : https://startbootstrap.com/theme/sb-admin-2
