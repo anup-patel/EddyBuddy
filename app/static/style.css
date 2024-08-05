@@ -1,0 +1,447 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#dataTablesearch td {
+  padding: 2.5px !important;
+  margin: 2px !important
+}
+#dataTablesearch th {
+  padding: 5px !important;
+  margin: 2px !important
+}
+
+#dataTablesearch tbody tr {
+  padding: 0px !important;
+  margin: 0px !important
+}
+
+.account-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2px;
+}
+
+.account-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.last-login {
+  font-size: 14px;
+  color: #777;
+}
+
+.account-actions {
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  background-color: #1976D2;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-login {
+  margin-right: 8px;
+}
+
+.strategy-list {
+  margin-left: 24px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"],
+select,
+textarea {
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+input[type="submit"],
+button {
+  background-color: #1976D2;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 1px;
+}
+
+input:disabled, select:disabled, button:disabled {
+  background: #eeeeee;
+  cursor: not-allowed;
+}
+
+
+.navbar {
+  background-color: white;
+}
+
+.navbar-brand h1 {
+  font-size: 1.5rem;
+  margin: 0;
+  padding: 0.5rem;
+}
+
+.navbar-item {
+  padding: 0.5rem 1rem;
+  text-decoration-line: none;
+  font-weight: bold;
+  color: #111;
+}
+
+.navbar-item-right {
+  margin-left: auto;
+}
+
+.navbar-item:hover {
+  background-color: #1976D2;
+  color: #fff;
+}
+
+.navbar-end {
+  display: flex;
+  flex-direction: row;
+}
+
+
+
+.collapse {
+  transition: none !important;
+}
+.toggle-icon {
+  float: right;
+  cursor: pointer;
+}
+
+.larger-icon {
+  font-size: 24px; /* Adjust the size as needed */
+}
+.toggle-button {
+  cursor: pointer;
+}
+.toggle-on {
+  color: green;
+}
+.toggle-off {
+  color: red;
+}
+.toggle-icon.toggle-on {
+    color: green; /* Color when it's on */
+}
+
+.toggle-icon.toggle-off {
+    color: red; /* Color when it's off */
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px; /* Decreased width for smaller size */
+  height: 20px; /* Decreased height for smaller size */
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: grey; /* Default color when off */
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px; /* Decreased height for smaller size */
+  width: 14px; /* Decreased width for smaller size */
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: green; /* Color when on */
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px); /* Adjusted value for smaller size */
+  -ms-transform: translateX(18px); /* Adjusted value for smaller size */
+  transform: translateX(18px); /* Adjusted value for smaller size */
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 10px; /* Adjusted value for smaller size */
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+
+.popup-form {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.popup-form form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: white;
+    text-align: center;
+}
+/* Media query for screens smaller than 768px (typical mobile devices) */
+@media (max-width: 768px) {
+  .popup-form form{
+      min-width: 70%;
+  }
+}
+
+
+.popup-form h1 {
+    margin-top: 0;
+}
+
+.popup-form input {
+    margin: 2px 0;
+    padding: 2px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+          body{
+              margin: 0;
+              /* font-size: .9rem; */
+              font-weight: 400;
+              line-height: 1.6;
+              color: #212529;
+              text-align: left;
+              background-color: #f5f8fa;
+          }
+
+          .navbar-laravel
+          {
+              box-shadow: 0 2px 4px rgba(0,0,0,.04);
+          }
+
+          .navbar-brand , .nav-link, .my-form, .login-form
+          {
+              font-family: Raleway, sans-serif;
+          }
+
+          .my-form
+          {
+              padding-top: 1.5rem;
+              padding-bottom: 1.5rem;
+          }
+
+          .my-form .row
+          {
+              margin-left: 0;
+              margin-right: 0;
+          }
+
+          .login-form
+          {
+              padding-top: 1.5rem;
+              padding-bottom: 1.5rem;
+          }
+
+          .login-form .row
+          {
+              margin-left: 0;
+              margin-right: 0;
+          }
+          .custom-label {
+                        color: white;
+                    }
+                
+        .custom-link {
+            color: white;
+            text-decoration: none;
+        }
+
+       
+    
+        .custom-link:active {
+            color: white;
+            text-decoration: underline;
+        }
+        .custom-link:hover {
+      color: #f2f2f2;
+      text-decoration: underline;
+        }
+
+.logo-container {
+              padding: 5px 10px; /* Padding around the logo text */
+              border-radius: 8px; /* Border radius to give the logo box a rounded look */
+              display: inline-block; /* Display the logo box as an inline-block element */
+              font-family: 'Poppins', sans-serif; /* Google Font family with bold weight */
+              font-size: 22px; /* Font size of the logo text */
+              font-weight: bold; /* Font weight of the logo text */
+              color: black; /* Text color of the logo */
+              text-transform: uppercase; /* Convert the text to uppercase */
+              /* background-color: black; */
+              }
+       
+      
+.btn_separator_popup {
+    width: 1px;
+    background-color: #28a745; /* Use Bootstrap success color */
+    height: 70%; /* Set separator height as needed */
+    display: inline-block; /* Display the separator inline */
+}
+
+.dataTable > thead > tr > th[class*="sort"]:before,
+.dataTable > thead > tr > th[class*="sort"]:after {
+content: "" !important;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#pnl-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#realised-pnl, #today-pnl {
+  font-family: Tahoma, sans-serif;
+  font-weight: normal;
+}
+
+.text-danger {
+  color: red !important;
+}
+
+.text-success {
+  color: green !important;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: #f9f9f9;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.card-footer {
+  padding: 10px;
+  text-align: center;
+}
+
+.ticker-container {
+  position: relative;
+  overflow: hidden;
+  background: lightcoral;
+  color: #fff;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 100%;
+  height: 40px;
+  border-radius: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+.ticker-content {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker 50s linear infinite;
+}
+
+.ticker-item {
+  margin-right: 30px;
+  font-size: 0.9em;
+  font-weight: 400;
+}
+
+@keyframes ticker {
+  0% {
+      transform: translateX(100%);
+  }
+  100% {
+      transform: translateX(-100%);
+  }
+}
+
+.centered-container {
+  display: flex;
+  justify-content: center;
+}
+
+.centered-container iframe {
+  width: 100%;
+  height: 467px;
+  border: 0;
+}
+
+.content {
+  width: 80%;
+  max-width: 650px;
+}
