@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{{log_name}}</title>
+    <!-- Custom fonts for this template-->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
+        type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .ask-box {
+            margin-bottom: 20px;
+        }
+
+        .ask-box textarea {
+            width: 100%;
+            resize: vertical;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            padding: 10px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .question label {
+            font-weight: bold;
+        }
+
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .spinner-border {
+            display: none;
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3em;
+        }
+
+        .spinner-border.show {
+            display: inline-block;
+        }
+
+        .file-item {
+            text-align: center;
+        }
+
+        .file-item a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar and Topbar -->
+        <!-- Sidebar and Topbar -->
+        <!-- Conditional Navbar Inclusion -->
+        {% if user.role == 'student' %}
+        {% include 'navbar.html' %}
+        {% else %}
+        {% include 'navbar_teacher.html' %}
+        {% endif %}
+        <!-- End of Sidebar and Topbar -->
+
+        <!-- Main Content -->
+        <!-- Begin Page Content -->
+
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Create Notice</h6>
+                </div>
+                <div class="card-body">
+
+                    <div class="ask-box">
+
+                        <form id="ask-form">
+                            <div class="form-group">
+                                <textarea id="prompt" name="prompt" rows="3" class="form-control"
+                                    placeholder="Enter Notice Context..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Generate Notice</button> <br>
+                            <div id="spinner-container" class="spinner-border text-primary mt-3"></div>
+                        </form>
+                    </div>
+
+                    <div id="result-container" class="alert alert-primary" role="alert" style="display:none;">
+                    </div>
+                    <div class="alert alert-primary" role="alert">
+                        <b>Latest Generated Notices</b>
+                    </div>
+
+                    <div id="previous-results" class="alert alert-primary" role="alert"></div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <script>
+            $(document).ready(function () {
+                // Function to load previous results from JSON file
+                function loadPreviousResults() {
+                    $.ajax({
+                        url: '/latest_created_notices',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (response) {
+                            console.log("Previous notices:", response); // Debugging: Log the response
+                            console.log("Previous notices:", response.result.length)
+                            console.log("Previous notices:", response.result)
+
+                            if (response.result && response.result.length > 0) {
+
+                                console.log("Hello")
+                                // Clear previous results
+                                $('#previous-results').empty();
+
+                                // Iterate through the notices and format them
+                                response.result.forEach((notice) => {
+                                    const noticeHtml = `
+                                            <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                                            <div class="card w-100">
+                                                <img src="${notice.img_url}" class="card-img-top" alt="${notice.title}"/>
+                                                <div class="card-body d-flex flex-column">
+                                                    <h5 class="card-title">${notice.title}</h5>
+                                                    <p class="card-text">${notice.description}</p>
+                                                    <a href="#!" class="btn btn-danger mt-auto">Add to Notice Board</a>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                            `;
+
+                                    $('#previous-results').append(noticeHtml);
+                                });
+
+                                // Show the results container
+                                $('#prev_notices').show();
+                            } else {
+                                $('#previous-results').hide();
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("Error fetching previous notices:", textStatus, errorThrown); // Debugging: Log any AJAX errors
+                        }
+                    });
+                }
+
+                // Load previous results when the document is ready
+                loadPreviousResults();
+            });
+        </script>
+
+
+
+        <script>
+            $(document).ready(function () {
+                $('#ask-form').on('submit', function (event) {
+                    event.preventDefault();
+
+                    const prompt = $('#prompt').val();
+
+                    $('#spinner-container').show(); // Show spinner
+
+                    $.ajax({
+                        url: '/create_notices',
+                        type: 'GET',
+                        data: { prompt: prompt },
+                        success: function (response) {
+                            console.log("API Response:", response); // Debugging: Log the response
+
+                            // Hide the spinner
+                            $('#spinner-container').hide();
+
+                            if (response.error) {
+                                alert(response.error);
+                                return;
+                            }
+
+                            // Clear previous results
+                            $('#result-container').empty();
+
+                            // Check if the response is a single notice object
+                            if (response.img_url && response.title && response.description) {
+                                // Ensure the image URL is correct
+                                const imgUrl = `/${response.img_url}`; // Adjust the path if necessary
+
+                                // Process and format the result
+                                const noticeHtml = `
+
+                                        <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                                            <div class="card w-100">
+                                                <img src="${imgUrl}" class="card-img-top" alt="${response.title}"/>
+                                                <div class="card-body d-flex flex-column">
+                                                    <h5 class="card-title">${response.title}</h5>
+                                                    <p class="card-text">${response.description}</p>
+                                                    <a href="#!" class="btn btn-danger mt-auto">Add to Notice Board</a>
+                                                </div>
+                                            </div>
+                                        </div> 
+
+
+                                            
+                                        `;
+
+                                $('#result-container').html(noticeHtml).show(); // Populate and show the container
+                                setTimeout(function() {
+                            location.reload();
+                        }, 1000); // 1-second delay before reloading
+                    }
+                             else {
+                                console.error("Invalid response format");
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("AJAX Error:", textStatus, errorThrown); // Debugging: Log any AJAX errors
+                            $('#spinner-container').hide(); // Hide spinner on error
+                        }
+                    });
+                });
+            });
+        </script>
+
+
+
+
+
+
+    </div>
+    </div>
+
+    </div>
+
+    <!-- /.container-fluid -->
+
+
+
+
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+</body>
+
+</html>

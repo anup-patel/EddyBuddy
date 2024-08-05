@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{{log_name}}</title>
+    <!-- Custom fonts for this template-->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
+        type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .ask-box {
+            margin-bottom: 20px;
+        }
+
+        .ask-box textarea {
+            width: 100%;
+            resize: vertical;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            padding: 10px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .question label {
+            font-weight: bold;
+        }
+
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .spinner-border {
+            display: none;
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3em;
+        }
+
+        .spinner-border.show {
+            display: inline-block;
+        }
+
+        .file-item {
+            text-align: center;
+        }
+
+        .file-item a:hover {
+            text-decoration: underline;
+        }
+
+        .upload-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-form-container .form-group {
+            margin-bottom: 20px;
+            /* Space below the form group */
+            padding: 10px;
+            /* Padding inside the form group */
+        }
+
+        .upload-form-container .form-group input[type="file"] {
+            padding: 10px;
+            /* Padding inside the file input */
+            border-radius: 4px;
+            /* Border radius */
+            border: 1px solid #ced4da;
+            /* Border color */
+            box-sizing: border-box;
+            /* Include padding and border in width/height */
+        }
+
+        .upload-form-container .btn {
+            margin-top: 20px;
+            /* Space above the button */
+            margin-bottom: 20px;
+            /* Space below the button */
+            display: block;
+            width: 100%;
+            /* Full width button */
+        }
+
+        .upload-form-container .spinner-border {
+            margin-top: 20px;
+            /* Space above the spinner */
+        }
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar and Topbar -->
+        <!-- Conditional Navbar Inclusion -->
+        {% if user.role == 'student' %}
+        {% include 'navbar.html' %}
+        {% else %}
+        {% include 'navbar_teacher.html' %}
+        {% endif %}
+        <!-- End of Sidebar and Topbar -->
+
+        <!-- Main Content -->
+        <!-- Begin Page Content -->
+
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Manage Notes</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Ask Box -->
+                    <div class="alert alert-primary" role="alert">
+                        <b>Existing Notes</b>
+                    </div>
+                    <div class="row" id="file-grid">
+                        <!-- File items will be injected here by JavaScript -->
+                    </div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $.getJSON('/list-files', function (data) {
+                                let fileGrid = $('#file-grid');
+                                data.files.forEach(file => {
+                                    fileGrid.append(`
+                                        <div class="col-md-3 mb-4">
+                                            <div class="card file-item">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${file}</h5>
+                                                    <a href="/download/${file}" class="btn btn-danger" download>
+                                                        <i class="fas fa-download"></i> Download
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `);
+                                });
+                            });
+                        });
+                    </script>
+
+                    <div class="ask-box">
+                        <div class="alert alert-primary" role="alert">
+                            <b>Upload Notes Here</b>
+                        </div>
+
+                        <form id="upload-form" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <input type="file" id="note-file" name="note-file" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload Now</button> <br>
+                            <div id="spinner-container" class="spinner-border text-primary mt-3"></div>
+                        </form>
+                    </div>
+
+                    <div id="result-container" class="alert alert-primary" role="alert" style="display:none;">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#upload-form').on('submit', function (event) {
+                event.preventDefault();
+
+                const formData = new FormData(this);
+
+                $('#spinner-container').addClass('show'); // Show spinner
+
+                $.ajax({
+                    url: '/upload_notes_api',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log("API Response:", response); // Debugging: Log the response
+
+                        if (response.error) {
+                            alert(response.error);
+                            return;
+                        }
+
+                        $('#result-container').html(`<div class="response">${response.message}</div>`).show(); // Show success message
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX Error:", textStatus, errorThrown); // Debugging: Log any AJAX errors
+                    },
+                    complete: function () {
+                        $('#spinner-container').removeClass('show'); // Hide spinner
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

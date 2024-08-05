@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{{log_name}}</title>
+    <!-- Custom fonts for this template-->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
+        type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .ask-box {
+            margin-bottom: 20px;
+        }
+
+        .ask-box textarea {
+            width: 100%;
+            resize: vertical;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            padding: 10px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .question label {
+            font-weight: bold;
+        }
+
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .spinner-border {
+            display: none;
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3em;
+        }
+
+        .spinner-border.show {
+            display: inline-block;
+        }
+
+          /* Styles for the floating speech icon */
+          #speech-icon-container {
+            position: fixed;
+            bottom: 20px;
+            left: 3.5%;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            z-index: 1000;
+            /* Ensures the icon is on top of other elements */
+        }
+
+        #speech-icon {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 40%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        #speech-icon:hover {
+            transform: scale(1.1);
+        }
+
+       
+        /* Audio wave animation styles */
+        .audio-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .audio-wave.active {
+            opacity: 1;
+        }
+
+        .bar {
+            width: 5px;
+            height: 20px;
+            margin: 0 2px;
+            background: orange;
+            animation: wave 1s linear infinite;
+        }
+
+        .bar:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .bar:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .bar:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .bar:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .bar:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                height: 20px;
+            }
+
+            50% {
+                height: 40px;
+            }
+        }
+
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar and Topbar -->
+        <!-- Sidebar and Topbar -->
+        <!-- Conditional Navbar Inclusion -->
+        {% if user.role == 'student' %}
+        {% include 'navbar.html' %}
+        {% else %}
+        {% include 'navbar_teacher.html' %}
+        {% endif %}
+        <!-- End of Sidebar and Topbar -->
+
+        <!-- Main Content -->
+        <!-- Begin Page Content -->
+
+        <div class="container-fluid">
+            <div id="speech-icon-container">
+                <img id="speech-icon"
+                    src="https://media.istockphoto.com/id/1244097573/vector/headphones-minimal-icon-with-sound-waves.jpg?s=612x612&w=0&k=20&c=OvARZEMYt_CM9M9-oJmMZ3O-HtEB-CAKqpGZPSA1acM="
+                    alt="Speech Icon">
+                <div class="audio-wave" id="audio-wave">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Fee Payment Online</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Ask Box -->
+                    <section>
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <div class="d-flex flex-row align-items-center">
+                                <h4 class="text-uppercase mt-1">Fee Payment</h4>
+                                <span class="ms-2 me-3"> Details</span>
+                            </div>
+                            <a href="#!">Cancel and return to the website</a>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-7 col-lg-7 col-xl-6 mb-4 mb-md-0">
+                                <h5 class="mb-0 text-success">$1,250.00</h5>
+                                <h5 class="mb-3">Semester Fee - Fall 2024</h5>
+                                <div>
+                                    <div class="mb-3">
+                                        <label for="student-name" class="form-label">Student Name</label>
+                                        <input type="text" class="form-control" id="student-name"
+                                            placeholder="Enter student name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="enrollment-number" class="form-label">Enrollment Number</label>
+                                        <input type="text" class="form-control" id="enrollment-number"
+                                            placeholder="Enter enrollment number" />
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div class="d-flex flex-row">
+                                            <h6 class="mb-0">Scholarship Discount </h6>
+                                            <h6 class="fw-bold text-success ms-2 mb-0 mr-2"> - $500.00</h6>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center text-primary">
+                                            <span class="ms-1">Add Scholarship</span>
+                                        </div>
+                                    </div>
+                                    <p>
+                                        The scholarship discount has been applied to reduce the total semester fee.
+                                    </p>
+                                    <div class="p-2 mb-3 d-flex justify-content-between align-items-center"
+                                        style="background-color: #eee;">
+                                        <span>School Fund - Full</span>
+                                        <span>School Fund - Partial</span>
+                                    </div>
+                                    <hr />
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div class="d-flex flex-row">
+                                            <h6 class="mb-0">Remaining Balance </h6>
+                                            <h6 class="fw-bold text-success ms-2 mb-0 mr-2"> $750.00</h6>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center text-primary">
+                                            <span class="ms-1">Add Payment Method</span>
+                                        </div>
+                                    </div>
+                                    <p>
+                                        The remaining balance is due for payment before the semester begins.
+                                    </p>
+                                    <!-- <div class="d-flex flex-column">
+                                  <div class="d-flex align-items-center mb-2">
+                                    <input
+                                      type="radio"
+                                      class="form-check-input me-2"
+                                      name="payment-options"
+                                      id="credit-card"
+                                      autocomplete="off"
+                                    />
+                                    <label class="form-check-label" for="credit-card">
+                                      Credit Card - **** 1234
+                                    </label>
+                                  </div>
+                                  <div class="d-flex align-items-center mb-2">
+                                    <input
+                                      type="radio"
+                                      class="form-check-input me-2"
+                                      name="payment-options"
+                                      id="debit-card"
+                                      autocomplete="off"
+                                      checked
+                                    />
+                                    <label class="form-check-label" for="debit-card">
+                                      Debit Card - **** 5678
+                                    </label>
+                                  </div>
+                                </div> -->
+                                </div>
+                                <div class="btn btn-success btn-lg btn-block">Proceed to Payment</div>
+                            </div>
+                            <div class="col-md-5 col-lg-4 col-xl-4 offset-lg-1 offset-xl-2">
+                                <div class="p-3" style="background-color: #eee;">
+                                    <span class="fw-bold">Fee Summary</span>
+                                    <div class="d-flex justify-content-between mt-3 mb-2">
+                                        <span>Original Fee</span> <span>$1,250.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Scholarship Discount</span> <span>-$500.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Additional Charges</span> <span>$0.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Other Discounts</span> <span>$0.00</span>
+                                    </div>
+                                    <hr />
+                                    <div class="d-flex justify-content-between mt-2">
+                                        <span class="lh-sm">Total Due</span>
+                                        <span>$750.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    </div>
+
+    </div>
+
+    <!-- /.container-fluid -->
+
+
+
+
+
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Logout Modal-->
+    {% include 'logout.html' %}
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#speech-icon-container').on('click', function () {
+                // Show spinner or loading state if needed
+                $('#speech-icon-container').append('');
+                $('#audio-wave').addClass('active'); // Activate audio wave animation
+
+                $.ajax({
+                    url: '/call_pwd_support_bot',  // Replace with your API endpoint
+                    type: 'GET',
+                    success: function (response) {
+                        // Handle the response from the API
+                        console.log(response);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX Error:", textStatus, errorThrown);
+                        alert('API call failed!');
+                    },
+                    complete: function () {
+                        // Remove spinner or loading state if needed
+                        $('#speech-icon-container .spinner').remove();
+                        $('#audio-wave').removeClass('active'); // Deactivate audio wave animation
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

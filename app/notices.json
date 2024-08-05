@@ -1,0 +1,22 @@
+[
+    {
+        "img_url": "https://images.pexels.com/photos/16689057/pexels-photo-16689057/free-photo-of-view-of-rows-of-bookshelves-in-a-college-library.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "title": "New Library Opening",
+        "description": "Our new library will be opening on 15th August. Join us for a grand opening ceremony!"
+    },
+    {
+        "img_url": "https://images.pexels.com/photos/2166/flight-sky-earth-space.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "title": "Science Fair",
+        "description": "The annual Science Fair will be held on 20th August. Showcase your experiments and projects."
+    },
+    {
+        "img_url": "https://images.pexels.com/photos/8204944/pexels-photo-8204944.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "title": "Parent-Teacher Meeting",
+        "description": "Join us for the Parent-Teacher Meeting on 25th August to discuss student progress and goals."
+    },
+    {
+        "img_url": "https://images.pexels.com/photos/3425993/pexels-photo-3425993.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "title": "Annual Sports Day",
+        "description": "Our Annual Sports Day is scheduled for 30th August. Participate in various sports and win exciting prizes!"
+    }
+]

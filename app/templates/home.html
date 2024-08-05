@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{{log_name}}</title>
+    <!-- Custom fonts for this template-->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
+        type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .carousel-item {
+            display: flex;
+        }
+
+        .carousel-item .card {
+            flex: 1;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            background: none;
+            border: 0px;
+            color: black
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            font-size: 2rem;
+            color: black;
+        }
+
+        .carousel-control-prev .visually-hidden,
+        .carousel-control-next .visually-hidden {
+            color: black;
+        }
+
+        /* Styles for the floating speech icon */
+        #speech-icon-container {
+            position: fixed;
+            bottom: 20px;
+            left: 3.5%;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            z-index: 1000;
+            /* Ensures the icon is on top of other elements */
+        }
+
+        #speech-icon {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 40%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        #speech-icon:hover {
+            transform: scale(1.1);
+        }
+        #record-button {
+            font-size: 24px;
+            cursor: pointer;
+            color: green;
+            transition: color 0.3s;
+        }
+        #record-button.recording {
+            color: red;
+        }
+        .spinner {
+            display: none;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Spinner styles */
+        .spinner {
+            position: absolute;
+            background: none;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            /* Adjusted size to match the larger icon */
+            height: 40px;
+            /* Adjusted size to match the larger icon */
+            margin-top: -20px;
+            /* Adjusted to center the spinner */
+            margin-left: -20px;
+            /* Adjusted to center the spinner */
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Audio wave animation styles */
+        .audio-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 10s;
+        }
+
+        .audio-wave.active {
+            opacity: 1;
+        }
+
+        .bar {
+            width: 5px;
+            height: 20px;
+            margin: 0 2px;
+            background: orange;
+            animation: wave 1s linear infinite;
+        }
+
+        .bar:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .bar:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .bar:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .bar:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .bar:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                height: 20px;
+            }
+
+            50% {
+                height: 40px;
+            }
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar and Topbar -->
+        <!-- Conditional Navbar Inclusion -->
+        {% if user.role == 'student' %}
+        {% include 'navbar.html' %}
+        {% else %}
+        {% include 'navbar_teacher.html' %}
+        {% endif %}
+        <!-- End of Sidebar and Topbar -->
+
+        <!-- Main Content -->
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Attention !</strong> The voice feature may not work on some browsers as they do not support microphone access over HTTP.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hid den="true">&times;</span>
+                </button>
+              </div>
+            <div id="speech-icon-container">
+                <img id="speech-icon" src="https://media.istockphoto.com/id/1244097573/vector/headphones-minimal-icon-with-sound-waves.jpg?s=612x612&w=0&k=20&c=OvARZEMYt_CM9M9-oJmMZ3O-HtEB-CAKqpGZPSA1acM=" alt="Speech Icon">
+                <div class="audio-wave" id="audio-wave">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+            <div class="alert alert-info" role="alert" style="display: none;">
+                <p id="status"></p>
+                <p id="recognized-text"></p>
+                <p id="generating-status"></p>
+            </div>
+                        
+            <script>
+                $(document).ready(function () {
+                  let recognition;
+                  let isListening = false;
+                  const speechSynthesis = window.speechSynthesis;
+              
+                  $('#speech-icon-container').on('click', function () {
+                      if (!isListening) {
+                          // Step 1: Speak the initial message
+                          const utterance = new SpeechSynthesisUtterance("How may I help you?");
+                          utterance.rate = 1; // Adjust speech rate to be slower
+                          utterance.voice = getFemaleVoice(); // Select a female voice if available
+                          utterance.onend = function () {
+                              // Step 2: Start listening for user input after the speech is finished
+                              startListening();
+                          };
+                          speechSynthesis.speak(utterance);
+                      }
+                  });
+              
+                  function startListening() {
+                      if (!('webkitSpeechRecognition' in window)) {
+                          alert("Speech recognition not supported in this browser.");
+                          return;
+                      }
+              
+                      recognition = new webkitSpeechRecognition();
+                      recognition.lang = 'en-US';
+                      recognition.interimResults = false;
+                      recognition.continuous = false;
+              
+                      $('#audio-wave').addClass('active'); // Activate audio wave animation
+              
+                      recognition.onstart = function () {
+                        $('.alert-info').show(); // Show alert div
+                          $('#status').text('Listening...');
+                          isListening = true;
+                      };
+              
+                      recognition.onresult = function (event) {
+                          const text = event.results[0][0].transcript;
+                          $('#recognized-text').text(`Recognized: ${text}`);
+              
+                          // Show "Generating Response... Please wait..." message
+                          $('#generating-status').text(`Generating Response .. Please wait ..`);
+              
+                          // Send recognized text to the server
+                          $.ajax({
+                              url: '/call_pwd_support_bot', // Replace with your API endpoint
+                              type: 'POST',
+                              contentType: 'application/json',
+                              data: JSON.stringify({ text: text }),
+                              success: function (response) {
+                                  $('#status').text('Processing completed');
+                                  $('#generating-status').text(`Response Completed`);
+                                  
+                                  // Convert server response to speech
+                                  const responseText = response.response || 'No response from server';
+                                  const utterance = new SpeechSynthesisUtterance(responseText);
+                                  utterance.rate = 1; // Adjust speech rate to be slower
+                                  utterance.voice = getFemaleVoice(); // Select a female voice if available
+                                  speechSynthesis.speak(utterance);
+                              },
+                              error: function (jqXHR, textStatus, errorThrown) {
+                                  console.error("AJAX Error:", textStatus, errorThrown);
+                                  $('#status').text('Error processing text');
+                              },
+                              complete: function () {
+                                  $('#audio-wave').removeClass('active'); // Deactivate audio wave animation
+                                  isListening = false;
+                              }
+                          });
+                      };
+              
+                      recognition.onerror = function (event) {
+                          console.error('Speech recognition error:', event.error);
+                          $('#status').text(`Error: ${event.error}`);
+                          $('#audio-wave').removeClass('active'); // Deactivate audio wave animation
+                          isListening = false;
+                      };
+              
+                      recognition.onend = function () {
+                          $('#status').text('Stopped');
+                          $('#audio-wave').removeClass('active'); // Deactivate audio wave animation
+                          isListening = false;
+                      };
+              
+                      recognition.start();
+                  }
+              
+                  // Function to get a female voice if available
+                  function getFemaleVoice() {
+                      const voices = speechSynthesis.getVoices();
+                      // Check for a female voice
+                      return voices.find(voice => voice.name.toLowerCase().includes('female')) || null;
+                  }
+              });
+              </script>
+              
+
+
+            <!-- Page Heading -->
+            
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <div
+                    class="h6 mb-0 text-gray-800 alert alert-primary d-flex justify-content-between align-items-center flex-grow-1">
+                    <b>Notice Board</b>
+                    {% if user.role == 'student' %}
+                    <a href="#" class="btn btn-sm btn-primary shadow-sm ms-3"><i
+                            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                    {% else %}
+                    <a href="/notice_create" class="btn btn-sm btn-danger shadow-sm ms-3"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Add Notice</a>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+            <div id="carouselMultiItemExample" class="carousel slide carousel-dark text-center" data-bs-ride="carousel">
+                <!-- Inner -->
+                <div class="carousel-inner py-4">
+                    <div class="carousel-item ">
+                        <div class="carousel-inner">
+                            <div class="row" id="carousel-container">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Carousel items will be injected here by JavaScript -->
+                </div>
+                <!-- Inner -->
+            </div>
+            <!-- Carousel wrapper -->
+
+            <script>
+                $(document).ready(function () {
+                    $.ajax({
+                        url: '/notices',
+                        type: 'GET',
+                        success: function (response) {
+                            let carouselInnerHtml = '';
+
+                            response.forEach((notice, index) => {
+                                const isActive = index === 0 ? 'active' : '';
+
+                                carouselInnerHtml += `
+                            
+                                        <div class="col-md-3 mb-4 d-flex align-items-stretch">
+                                            <div class="card w-100">
+                                                <img src="${notice.img_url}" class="card-img-top" alt="${notice.title}"/>
+                                                <div class="card-body d-flex flex-column">
+                                                    <h5 class="card-title">${notice.title}</h5>
+                                                    <p class="card-text">${notice.description}</p>
+                                                    <a href="#!" class="btn btn-primary mt-auto">Read More</a>
+                                                </div>
+                                            </div>
+                                        </div> 
+                        `;
+                            });
+
+                            $('#carousel-container').html(carouselInnerHtml);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching notices:', error);
+                        }
+                    });
+                });
+            </script>
+
+
+
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+
+            <div class="alert alert-primary" role="alert">
+                <b>Report</b>
+            </div>
+            <!-- Content Row -->
+            <div class="row">
+
+                <!-- Earnings (Monthly) Card Example -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Attendence Percentage</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">85%</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Earnings (Monthly) Card Example -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Submitted Assignments</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">10</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-thumbs-up fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Earnings (Monthly) Card Example -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col-auto">
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="progress progress-sm mr-2">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 50%"
+                                                    aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Requests Card Example -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Pending Assignments</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Row -->
+
+            <div class="row">
+
+                <!-- Area Chart -->
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Performance Overview</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="#">Download</a>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="myAreaChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Announcements</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="#">Download</a>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="list-group list-group-flush small">
+                                <a class="list-group-item list-group-item-action" href="#!">
+                                    <i class="fas fa-calendar fa-fw text-blue me-2"></i>
+                                    Annual Exam from August 2024
+                                </a>
+                                <a class="list-group-item list-group-item-action" href="#!">
+                                    <i class="fas fa-campground fa-fw text-purple me-2"></i>
+                                    Annual Picnic Planning in Nov 2024
+                                </a>
+                                <a class="list-group-item list-group-item-action" href="#!">
+                                    <i class="fas fa-sun fa-fw text-green me-2"></i>
+                                    Summer Vacation from March 2025
+                                </a>
+                                <a class="list-group-item list-group-item-action" href="#!">
+                                    <i class="fas fa-pencil-alt fa-fw text-yellow me-2"></i>
+                                    New Semester registration open Now
+                                </a>
+                                <a class="list-group-item list-group-item-action" href="#!">
+                                    <i class="fas fa-tools fa-fw text-orange me-2"></i>
+                                    Conference on Innovation in Dec 2024
+                                </a>
+                                <a class="list-group-item list-group-item-action" href="#!">
+                                    <i class="fas fa-tools fa-fw text-orange me-2"></i>
+                                    Workshop on Advanced Techniques in Jan 2025
+                                </a>
+                                <a class="list-group-item list-group-item-action" href="#!">
+                                    <i class="fas fa-graduation-cap fa-fw text-teal me-2"></i>
+                                    Graduation Ceremony in May 2025
+                                </a>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Content Row -->
+            <div class="row">
+
+                <!-- Content Column -->
+                <div class="col-lg-6 mb-4">
+
+                    <!-- Project Card Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Syllabus Status</h6>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="small font-weight-bold">English <span class="float-right">20%</span></h4>
+                            <div class="progress mb-4">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
+                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <h4 class="small font-weight-bold">Physics <span class="float-right">40%</span></h4>
+                            <div class="progress mb-4">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <h4 class="small font-weight-bold">Chemistry <span class="float-right">60%</span></h4>
+                            <div class="progress mb-4">
+                                <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60"
+                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <h4 class="small font-weight-bold">Mathematics <span class="float-right">80%</span></h4>
+                            <div class="progress mb-4">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
+                                    aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <h4 class="small font-weight-bold">Computer Science <span
+                                    class="float-right">Complete!</span></h4>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
+                                    aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="col-lg-6 mb-4">
+
+                    <!-- Illustrations -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Upcoming Competitions</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
+                                    src="{{ url_for('static', filename='img/undraw_posting_photo.svg')}}" alt="...">
+                            </div>
+                            <p>New Content for Students Here</p>
+                            <a target="_blank" rel="nofollow" href="/">Know your Progress in details &rarr;</a>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+
+    </div>
+    <!-- End of Page Wrapper -->
+    {% include 'logout.html' %}
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js')}}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js')}}"></script>
+
+
+    <!-- <script>
+        $(document).ready(function () {
+            $('#speech-icon-container').on('click', function () {
+                // Show spinner or loading state if needed
+                $('#speech-icon-container').append('');
+                $('#audio-wave').addClass('active'); // Activate audio wave animation
+
+                $.ajax({
+                    url: '/call_pwd_support_bot',  // Replace with your API endpoint
+                    type: 'GET',
+                    success: function (response) {
+                        // Handle the response from the API
+                        console.log(response);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX Error:", textStatus, errorThrown);
+                        alert('API call failed!');
+                    },
+                    complete: function () {
+                        // Remove spinner or loading state if needed
+                        $('#speech-icon-container .spinner').remove();
+                        $('#audio-wave').removeClass('active'); // Deactivate audio wave animation
+                    }
+                });
+            });
+        });
+    </script> -->
+
+<!-- <script>
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+
+async function toggleRecording() {
+    const statusElement = document.getElementById('status');
+    const recordButton = document.getElementById('record-button');
+    const spinner = document.getElementById('spinner');
+
+    if (isRecording) {
+        mediaRecorder.stop();
+        recordButton.classList.remove('recording');
+        statusElement.textContent = 'Stopping...';
+        spinner.style.display = 'none';
+        isRecording = false;
+    } else {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'recording.webm');
+
+                fetch('/upload_audio', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(text => {
+                    statusElement.textContent = `Server response: ${text}`;
+                })
+                .catch(error => {
+                    statusElement.textContent = `Error: ${error}`;
+                });
+            };
+
+            mediaRecorder.start();
+            recordButton.classList.add('recording');
+            statusElement.textContent = 'Recording...';
+            spinner.style.display = 'block';
+            isRecording = true;
+        } catch (error) {
+            statusElement.textContent = `Error: ${error}`;
+        }
+    }
+}
+
+</script> -->
+
+</body>
+
+</html>

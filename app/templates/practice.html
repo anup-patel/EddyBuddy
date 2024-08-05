@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{{log_name}}</title>
+    <!-- Custom fonts for this template-->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
+        type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .ask-box {
+            margin-bottom: 20px;
+        }
+
+        .ask-box textarea {
+            width: 100%;
+            resize: vertical;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            padding: 10px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .question label {
+            font-weight: bold;
+        }
+
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .spinner-border {
+            display: none;
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3em;
+        }
+
+        .spinner-border.show {
+            display: inline-block;
+        }
+        /* Styles for the floating speech icon */
+        #speech-icon-container {
+            position: fixed;
+            bottom: 20px;
+            left: 3.5%;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            z-index: 1000;
+            /* Ensures the icon is on top of other elements */
+        }
+
+        #speech-icon {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 40%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        #speech-icon:hover {
+            transform: scale(1.1);
+        }
+
+       
+
+        /* Audio wave animation styles */
+        .audio-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .audio-wave.active {
+            opacity: 1;
+        }
+
+        .bar {
+            width: 5px;
+            height: 20px;
+            margin: 0 2px;
+            background: orange;
+            animation: wave 1s linear infinite;
+        }
+
+        .bar:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .bar:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .bar:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .bar:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .bar:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                height: 20px;
+            }
+
+            50% {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar and Topbar -->
+        <!-- Sidebar and Topbar -->
+        <!-- Conditional Navbar Inclusion -->
+        {% if user.role == 'student' %}
+        {% include 'navbar.html' %}
+        {% else %}
+        {% include 'navbar_teacher.html' %}
+        {% endif %}
+        <!-- End of Sidebar and Topbar -->
+
+        <!-- Main Content -->
+        <!-- Begin Page Content -->
+
+        <div class="container-fluid">
+            <div id="speech-icon-container">
+                <img id="speech-icon" src="https://media.istockphoto.com/id/1244097573/vector/headphones-minimal-icon-with-sound-waves.jpg?s=612x612&w=0&k=20&c=OvARZEMYt_CM9M9-oJmMZ3O-HtEB-CAKqpGZPSA1acM=" alt="Speech Icon">
+                <div class="audio-wave" id="audio-wave">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+            <div class="alert alert-info" role="alert" style="display: none;">
+                <p id="status"></p>
+                <p id="recognized-text"></p>
+                <p id="generating-status"></p>
+            </div>
+                        
+            <script>
+                $(document).ready(function () {
+                  let recognition;
+                  let isListening = false;
+                  const speechSynthesis = window.speechSynthesis;
+              
+                  $('#speech-icon-container').on('click', function () {
+                      if (!isListening) {
+                          // Step 1: Speak the initial message
+                          const utterance = new SpeechSynthesisUtterance("How may I help you?");
+                          utterance.rate = 1; // Adjust speech rate to be slower
+                          utterance.voice = getFemaleVoice(); // Select a female voice if available
+                          utterance.onend = function () {
+                              // Step 2: Start listening for user input after the speech is finished
+                              startListening();
+                          };
+                          speechSynthesis.speak(utterance);
+                      }
+                  });
+              
+                  function startListening() {
+                      if (!('webkitSpeechRecognition' in window)) {
+                          alert("Speech recognition not supported in this browser.");
+                          return;
+                      }
+              
+                      recognition = new webkitSpeechRecognition();
+                      recognition.lang = 'en-US';
+                      recognition.interimResults = false;
+                      recognition.continuous = false;
+              
+                      $('#audio-wave').addClass('active'); // Activate audio wave animation
+              
+                      recognition.onstart = function () {
+                        $('.alert-info').show(); // Show alert div
+                          $('#status').text('Listening...');
+                          isListening = true;
+                      };
+              
+                      recognition.onresult = function (event) {
+                          const text = event.results[0][0].transcript;
+                          $('#recognized-text').text(`Recognized: ${text}`);
+              
+                          // Show "Generating Response... Please wait..." message
+                          $('#generating-status').text(`Generating Response .. Please wait ..`);
+              
+                          // Send recognized text to the server
+                          $.ajax({
+                              url: '/call_pwd_support_bot', // Replace with your API endpoint
+                              type: 'POST',
+                              contentType: 'application/json',
+                              data: JSON.stringify({ text: text }),
+                              success: function (response) {
+                                  $('#status').text('Processing completed');
+                                  $('#generating-status').text(`Response Completed`);
+                                  
+                                  // Convert server response to speech
+                                  const responseText = response.response || 'No response from server';
+                                  const utterance = new SpeechSynthesisUtterance(responseText);
+                                  utterance.rate = 1; // Adjust speech rate to be slower
+                                  utterance.voice = getFemaleVoice(); // Select a female voice if available
+                                  speechSynthesis.speak(utterance);
+                              },
+                              error: function (jqXHR, textStatus, errorThrown) {
+                                  console.error("AJAX Error:", textStatus, errorThrown);
+                                  $('#status').text('Error processing text');
+                              },
+                              complete: function () {
+                                  $('#audio-wave').removeClass('active'); // Deactivate audio wave animation
+                                  isListening = false;
+                              }
+                          });
+                      };
+              
+                      recognition.onerror = function (event) {
+                          console.error('Speech recognition error:', event.error);
+                          $('#status').text(`Error: ${event.error}`);
+                          $('#audio-wave').removeClass('active'); // Deactivate audio wave animation
+                          isListening = false;
+                      };
+              
+                      recognition.onend = function () {
+                          $('#status').text('Stopped');
+                          $('#audio-wave').removeClass('active'); // Deactivate audio wave animation
+                          isListening = false;
+                      };
+              
+                      recognition.start();
+                  }
+              
+                  // Function to get a female voice if available
+                  function getFemaleVoice() {
+                      const voices = speechSynthesis.getVoices();
+                      // Check for a female voice
+                      return voices.find(voice => voice.name.toLowerCase().includes('female')) || null;
+                  }
+              });
+              </script>
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Practice Questions</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Ask Box -->
+                    <div class="ask-box">
+                        <div class="alert alert-info" role="alert">
+                            <b>Usage Instruction : </b><br>
+                            Enter Topic Name for which you want to practice? <br> 
+                         
+                            Example 1  :  Photosynthesis <br>
+                            Example 2  : Water Cycle <br>
+                            Example 3  : India <br>
+                            
+                        </div>
+
+                        <div class="alert alert-primary" role="alert">
+                            <b>Provide your input to get a list of questions for practice</b>
+                        </div>
+
+                        <form id="ask-form">
+                            <div class="form-group">
+                                <textarea id="prompt" name="prompt" rows="3" class="form-control"
+                                    placeholder="Enter Topic Name here..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Get me Questions</button> <br>
+                            <div id="spinner-container" class="spinner-border text-primary mt-3"></div>
+                        </form>
+                    </div>
+
+                    <!-- Questions and Options -->
+                    <div id="questions-container" style="display:none;">
+                        <div class="alert alert-success" role="alert">
+                            <b>List of Questions</b>
+                        </div>
+                        <form id="questions-form">
+                            <div id="questions-list"></div>
+                            <button type="submit" class="btn btn-primary">Submit Answers</button>
+                        </form>
+                        <div id="score-container" style="display:none;">
+                            <br>
+                            <div class="alert alert-success" role="alert">
+                                Your Score: <span id="score"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $('#ask-form').on('submit', function (event) {
+                    event.preventDefault();
+
+                    const prompt = $('#prompt').val();
+
+                    $('#spinner-container').addClass('show'); // Show spinner
+
+                    $.ajax({
+                        url: '/generate-mcqs',
+                        type: 'GET',
+                        data: { prompt: prompt },
+                        success: function (response) {
+                            const questions = response.questions;
+                            const answers = response.answers; // Assuming the API returns correct answers
+
+                            let questionsHtml = '';
+
+                            questions.forEach((question, index) => {
+                                questionsHtml += `<div class="question">
+                                                <label>${question.question}</label><br>
+                                                `;
+
+                                question.options.forEach(option => {
+                                    // Extract the actual label without the letter identifier
+                                    const label = option.label.replace(/^[a-d]\)\s*/, ''); // Remove "a) ", "b) ", etc.
+                                    questionsHtml += `
+                                                    <input type="radio" name="question${index}" value="${option.value}"> ${label}
+                                                <br>`;
+                                });
+
+                                questionsHtml += `</div><br>`;
+                            });
+
+                            $('#questions-list').html(questionsHtml);
+                            $('#questions-container').show();
+
+                            // Store correct answers for later comparison
+                            $('#questions-container').data('correct-answers', answers);
+                        },
+                        complete: function () {
+                            $('#spinner-container').removeClass('show'); // Hide spinner
+                        }
+                    });
+                });
+
+                $('#questions-form').on('submit', function (event) {
+                    event.preventDefault();
+
+                    // Collect answers
+                    const answers = [];
+                    const correctAnswers = $('#questions-container').data('correct-answers');
+                    $('#questions-list input:checked').each(function () {
+                        answers.push($(this).val());
+                    });
+
+                    // Compute score
+                    let score = 0;
+                    answers.forEach((answer, index) => {
+                        if (answer === correctAnswers[index]) {
+                            score++;
+                        }
+                    });
+
+                    // Highlight correct options
+                    $('#questions-list .question').each(function (index) {
+                        const correctAnswer = correctAnswers[index];
+                        $(this).find('input').each(function () {
+                            if ($(this).val() === correctAnswer) {
+                                $(this).next().css('color', 'green'); // Highlight correct option
+                            }
+                        });
+                    });
+
+                    // Display score
+                    $('#score').text(`Your score: ${score} out of ${correctAnswers.length}`);
+                    $('#score-container').show();
+                });
+            });
+        </script>
+
+
+
+
+
+    </div>
+    </div>
+
+    </div>
+
+    <!-- /.container-fluid -->
+
+
+
+
+
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Logout Modal-->
+    {% include 'logout.html' %}
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+    <!-- <script>
+        $(document).ready(function () {
+            $('#speech-icon-container').on('click', function () {
+                // Show spinner or loading state if needed
+                $('#speech-icon-container').append('');
+                $('#audio-wave').addClass('active'); // Activate audio wave animation
+
+                $.ajax({
+                    url: '/call_pwd_support_bot',  // Replace with your API endpoint
+                    type: 'GET',
+                    success: function (response) {
+                        // Handle the response from the API
+                        console.log(response);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX Error:", textStatus, errorThrown);
+                        alert('API call failed!');
+                    },
+                    complete: function () {
+                        // Remove spinner or loading state if needed
+                        $('#speech-icon-container .spinner').remove();
+                        $('#audio-wave').removeClass('active'); // Deactivate audio wave animation
+                    }
+                });
+            });
+        });
+    </script> -->
+</body>
+
+</html>

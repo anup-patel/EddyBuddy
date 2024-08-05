@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='stock.png') }}" type="image/png">
+
+
+  <!-- Fonts -->
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
+  <link rel="icon" href="Favicon.png">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+  <title>Falcon Hackathon</title>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light navbar-laravel">
+    <div class="container">
+      <!-- <a class="logo-container" href="/">AlgoTrading Platform </a> -->
+      <!-- <img src="/static/logo.png" width="200px" style="padding: 10px;" alt="AlgoTrading">
+         -->
+      <div class="navbar-brand">Falcon Hackathon</div>
+
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto d-none d-lg-flex">
+          <div class="btn-toolbar" role="toolbar" aria-label="Login and Register">
+            <div class="btn-group" role="group">
+              <a class="btn btn-primary active custom-label custom-link" href="/login">Login</a>
+              <div class="btn-separator"></div>
+              <a class="btn btn-primary active custom-label custom-link" href="/" disabled>Register</a>
+            </div>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <main class="login-form">
+    <div class="container d-flex align-items-center">
+      <div class="card align-self-center w-100">
+        <div class="card-header"><b>Welcome to Login Page</b></div>
+        <div class="card-body">
+          <form action="" method="POST">
+            <div class="form-group row">
+              <label for="username" class="col-md-4 col-form-label text-md-right">Username</label>
+              <div class="col-md-6">
+                <input type="text" id="username" class="form-control" name="username" required autofocus>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+              <div class="col-md-6">
+                <input type="password" id="password" class="form-control" name="password" required>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-6 offset-md-4">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="remember"> Remember Me
+                  </label>
+                  <br>
+                  <b>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for msg in messages %}
+                    <p style="color: red;">{{msg}}</p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                  </b>
+                </div>
+              </div>
+            </div>
+
+
+
+
+            <div class="col-md-6 offset-md-4">
+              <button type="submit" class="btn btn-primary">
+                Login
+              </button>
+              <button type="submit" class="btn btn-danger" style="margin-left: 10px;">
+                <a href="/" class="custom-link" disabled>Register</a>
+              </button>
+            </div>
+          </form>
+
+
+
+        
+        </div>
+
+      
+        <div class="alert alert-primary" role="alert">
+          <h6 class="alert-heading">Users and Passwords for Demo</h6>
+          <hr>
+          <div class="row">
+            <div class="col-md-4">
+              <p><b>Username:</b> harry <br> <b>Password:</b> Harry@123 <br> <b>Role:</b> Student</p>
+            </div>
+            <div class="col-md-4">
+              <p><b>Username:</b> robert <br> <b>Password:</b> Robert@123 <br> <b>Role:</b> Student</p>
+            </div>
+            <div class="col-md-4">
+              <p><b>Username:</b> julia <br> <b>Password:</b> Julia@123 <br> <b>Role:</b> Teacher</p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+   
+
+  </main>
+  
+
+</body>
+
+</html>
