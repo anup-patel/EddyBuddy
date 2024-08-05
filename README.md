@@ -19,11 +19,12 @@ Add AI71 API in following:
 Add freepik API in : 
 - create_a_notice.py
 
-### Planning
-- Dynamic Navigation Menu for Student, Teachers and Parents
-- Alert, Summary and Stats for All
-- Interactive Chatbot 
-- Send Feedback Mechanism
+### Features
+- Performance Bot using Falcon
+- Learning Bot using Falcon
+- Create Notice using Falcon
+- Quiz for Topic using Falcon
+- Feedback Mechanism
 - Attendence Tracking
 - Notice Board
-- Add Speech Capability for the ease of blind peoples
+- Speech Capability for the ease of blind peoples using Falcon
