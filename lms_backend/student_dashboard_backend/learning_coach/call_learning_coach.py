@@ -6,7 +6,7 @@ import requests
 
 class FalconLLM:
     def __init__(self, model="tiiuae/falcon-180b-chat"):
-        self.api_key = "api71-api-71ed95d2-58cf-4d55-a75c-a2f713452e0f"
+        self.api_key = "ENTER AI71 API"
         self.model = model
         self.api_url = "https://api.ai71.ai/v1/" 
         self.url = f"{self.api_url}chat/completions"
