@@ -1,8 +1,6 @@
 # FalconHackathon
 Falcon Hackathon 2024
 
-![Alt text](demo.png)
-
 ## How to Start Flask: 
 
 ```
